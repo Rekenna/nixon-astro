@@ -3,6 +3,6 @@
  */
 
 export const configuration = {
-  siteTitle: "Nixon Photography",
+  siteTitle: "Jake Nixon Photography",
   siteDescription: "Photography by Jake Nixon",
 };

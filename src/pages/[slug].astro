@@ -1,0 +1,35 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Prose from "@/components/Prose.astro";
+
+import { CONTENT_TYPES, contentfulClient } from "@/lib/contentful";
+import type { PageContent } from "@/lib/contentful";
+import { documentToHtmlString } from "@contentful/rich-text-html-renderer";
+
+export const prerender = true;
+export async function getStaticPaths() {
+  const entries = await contentfulClient.getEntries<PageContent>({
+    content_type: CONTENT_TYPES.CONTENT_PAGE,
+  });
+
+  const pages = entries.items.map((item) => ({
+    params: { slug: item.fields.slug },
+    props: {
+      title: item.fields.title,
+      content: documentToHtmlString(item.fields.content),
+    },
+  }));
+  return pages;
+}
+
+const { content, title } = Astro.props;
+---
+
+<Layout title={title}>
+  <div class="container max-w-7xl lg:p-8 mx-auto">
+    <h1 class="text-4xl mb-4 text-center font-bold">{title}</h1>
+    <Prose>
+      <article set:html={content} />
+    </Prose>
+  </div>
+</Layout>

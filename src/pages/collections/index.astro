@@ -1,0 +1,36 @@
+---
+import { configuration } from "@/configuration";
+import Layout from "@/layouts/Layout.astro";
+
+import { CONTENT_TYPES, contentfulClient } from "@/lib/contentful";
+import type { PageBlogPost } from "@/lib/contentful";
+
+const entries = await contentfulClient.getEntries<PageBlogPost>({
+  content_type: CONTENT_TYPES.BLOG_POST,
+});
+
+const posts = entries.items.map((item) => {
+  const { title, date, slug } = item.fields;
+  return {
+    title,
+    slug,
+    date: new Date(date).toLocaleDateString(),
+  };
+});
+---
+
+<Layout title={configuration.siteTitle}>
+  <h1>My Blog</h1>
+  <ul>
+    {
+      posts.map((post) => (
+        <li>
+          <a href={`/posts/${post.slug}/`}>
+            <h2>{post.title}</h2>
+          </a>
+          <time>{post.date}</time>
+        </li>
+      ))
+    }
+  </ul>
+</Layout>

@@ -1,13 +1,15 @@
 ---
-import Layout from "../../layouts/Layout.astro";
+import Layout from "@/layouts/Layout.astro";
+import Prose from "@/components/Prose.astro";
 
-import { CONTENT_TYPES, contentfulClient } from "../../lib/contentful";
-import type { PageBlogPost } from "../../lib/contentful";
+import { CONTENT_TYPES, contentfulClient } from "@/lib/contentful";
+import type { PageBlogPost } from "@/lib/contentful";
 import { documentToHtmlString } from "@contentful/rich-text-html-renderer";
 
+export const prerender = true;
 export async function getStaticPaths() {
   const entries = await contentfulClient.getEntries<PageBlogPost>({
-    content_type: CONTENT_TYPES.PAGE_BLOG_POST,
+    content_type: CONTENT_TYPES.BLOG_POST,
   });
 
   const pages = entries.items.map((item) => ({
@@ -25,7 +27,11 @@ const { content, title, date } = Astro.props;
 ---
 
 <Layout title={title}>
-  <h1>{title}</h1>
-  <time>{date}</time>
-  <article set:html={content} />
+  <div class="container max-w-7xl lg:p-8 mx-auto">
+    <h1 class="text-4xl mb-4 text-center font-bold">{title}</h1>
+    <p class="text-center">Published: {date}</p>
+    <Prose>
+      <article set:html={content} />
+    </Prose>
+  </div>
 </Layout>

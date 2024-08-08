@@ -1,0 +1,38 @@
+---
+import { configuration } from "@/configuration";
+import Layout from "@/layouts/Layout.astro";
+import Card from "@/components/Card.astro";
+
+import { CONTENT_TYPES, contentfulClient } from "@/lib/contentful";
+import type { PageBlogPost } from "@/lib/contentful";
+
+const entries = await contentfulClient.getEntries<PageBlogPost>({
+  content_type: CONTENT_TYPES.BLOG_POST,
+});
+
+const posts = entries.items.map((item) => {
+  const { title, date, slug } = item.fields;
+  return {
+    title,
+    slug,
+    date: new Date(date).toLocaleDateString(),
+  };
+});
+---
+
+<Layout title={configuration.siteTitle}>
+  <div class="container max-w-7xl lg:p-8 mx-auto">
+    <h1 class="text-4xl mb-4">My Blog</h1>
+    <ul>
+      {
+        posts.map((post) => (
+          <Card
+            href={`/blog/${post.slug}`}
+            title={post.title}
+            body={post.date}
+          />
+        ))
+      }
+    </ul>
+  </div>
+</Layout>

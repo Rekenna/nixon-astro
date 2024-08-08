@@ -1,9 +1,56 @@
 ---
+import Masthead, { type MastheadProps } from "@/components/Masthead";
+import { CONTENT_TYPES, contentfulClient } from "@/lib/contentful";
+import type { NavigationMenu } from "@/lib/contentful";
+import type { Entry } from "contentful";
+
 interface Props {
   title: string;
 }
 
+const pathname = new URL(Astro.request.url).pathname;
+
+const entries = await contentfulClient.getEntries<NavigationMenu>({
+  content_type: CONTENT_TYPES.NAVIGATION_MENU,
+  limit: 1,
+  "fields.slug": "main-navigation",
+});
+
+// Format the menu items
+const menu =
+  entries.items.map((item) => {
+    const { internalName, slug, items } = item.fields;
+
+    const formattedItems = items.map((item) => {
+      const { title, slug, href, isExternal, ...itemRest } = (
+        item as Entry<any, undefined, string>
+      ).fields;
+
+      // If the item is not external, we need to trim out the leading part of the URL
+      // and only leave the slug. Check if the href exists first, and fallback to the slug
+      let formattedHref = (href as string) || `/${slug}`;
+      if (!isExternal) {
+        formattedHref = formattedHref.replace(/^https?:\/\/[^/]+/, "");
+      }
+
+      return {
+        title,
+        slug,
+        href: formattedHref,
+        isExternal,
+        isActive: formattedHref === pathname,
+      };
+    });
+
+    return {
+      internalName,
+      slug,
+      items: formattedItems,
+    };
+  })[0] || {};
+
 const { title } = Astro.props;
+
 ---
 
 <!doctype html>
@@ -16,9 +63,38 @@ const { title } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
-  <body>
+  <body class="bg-dark font-sans text-white relative">
+    <Masthead menu={menu as MastheadProps["menu"]} />
     <main>
       <slot />
     </main>
   </body>
 </html>
+
+
+<!-- This is just for font registration -->
+<style is:global> 
+@font-face {
+  font-family: 'PP Neue Montreal';
+  src: url('/fonts/PPNeueMontreal/PPNeueMontreal-Regular.otf') format('otf');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PP Neue Montreal';
+  src: url('/fonts/PPNeueMontreal/PPNeueMontreal-Italic.otf') format('otf');
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PP Neue Montreal';
+  src: url('/fonts/PPNeueMontreal/PPNeueMontreal-Bold.otf') format('otf');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+</style>
