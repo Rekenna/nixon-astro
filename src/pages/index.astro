@@ -11,28 +11,41 @@ const entries = await contentfulClient.getEntries<PortfolioCollection>({
 
 const collections = entries.items.map((item) => {
   const { title, slug, description, photos } = item.fields;
+
+  const formattedPhotos = photos
+    .map((photo) => {
+      if ("fields" in photo) {
+        const { title, slug, content, image, products } = photo.fields;
+        return {
+          title,
+          slug,
+          content,
+          image: image && "fields" in image ? image.fields : null,
+          products,
+        };
+      }
+      return null;
+    })
+    .filter(Boolean);
   return {
     title,
     slug,
     description,
-    photos,
+    photos: formattedPhotos,
   };
 });
-
-console.log({ collections });
 ---
 
 <Layout title={configuration.siteTitle}>
-  <!-- <ul>
+  <ul>
     {
-      posts.map((post) => (
+      collections.map((collection) => (
         <li>
-          <a href={`/posts/${post.slug}/`}>
-            <h2>{post.title}</h2>
+          <a href={`/collections/${collection.slug}/`}>
+            <h2>{collection.title}</h2>
           </a>
-          <time>{post.date}</time>
         </li>
       ))
     }
-  </ul> -->
+  </ul>
 </Layout>

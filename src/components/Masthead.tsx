@@ -26,7 +26,7 @@ export default function Masthead({ menu }: MastheadProps) {
     <header className="bg-transparent sticky inset-0 z-10">
       <nav
         aria-label="Global"
-        className="mx-auto flex items-center justify-between p-6 lg:px-8"
+        className="mx-auto flex items-center justify-between p-6 lg:px-8 lg:h-20"
       >
         <Logo />
         <div className="flex lg:hidden">

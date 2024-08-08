@@ -10,11 +10,15 @@ export default {
 			  },
 			colors: {
 				dark: colors.slate[950]
-			}
+			},
+			gridTemplateRows: {
+				'[auto,auto,1fr]': 'auto auto 1fr',
+			  },
 		},
 	},
 	plugins: [
 		require('@tailwindcss/typography'),
+		require('@tailwindcss/aspect-ratio'),
 		require('@headlessui/tailwindcss')
 	],
 }

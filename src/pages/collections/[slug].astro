@@ -2,30 +2,84 @@
 import Layout from "@/layouts/Layout.astro";
 
 import { CONTENT_TYPES, contentfulClient } from "@/lib/contentful";
-import type { PageBlogPost } from "@/lib/contentful";
-import { documentToHtmlString } from "@contentful/rich-text-html-renderer";
+import type { PortfolioCollection } from "@/lib/contentful";
+import Breadcrumbs from "@/components/Breadcrumbs";
+import PhotoGrid from "@/components/PhotoGrid";
 
+export const prerender = true;
 export async function getStaticPaths() {
-  const entries = await contentfulClient.getEntries<PageBlogPost>({
-    content_type: CONTENT_TYPES.BLOG_POST,
+  const entries = await contentfulClient.getEntries<PortfolioCollection>({
+    content_type: CONTENT_TYPES.PORTFOLIO_COLLECTION,
   });
 
-  const pages = entries.items.map((item) => ({
-    params: { slug: item.fields.slug },
-    props: {
-      title: item.fields.title,
-      content: documentToHtmlString(item.fields.content),
-      date: new Date(item.fields.date).toLocaleDateString(),
-    },
-  }));
+  const pages = entries.items.map((item) => {
+    const { title, slug, description, photos } = item.fields;
+
+    const formattedPhotos = photos
+      .map((photo, i) => {
+        if ("fields" in photo) {
+          const {
+            title,
+            slug: photoSlug,
+            content,
+            image,
+            products,
+          } = photo.fields;
+
+          const formattedImage =
+            image && "fields" in image
+              ? {
+                  id: image.sys.id,
+                  imageSrc: image.fields.file?.url as string,
+                  imageAlt: image.fields.title as string,
+                  primary: false,
+                }
+              : null;
+
+          return {
+            title,
+            slug: photoSlug,
+            content,
+            image: formattedImage,
+            products,
+          };
+        }
+        return null;
+      })
+      .filter(Boolean);
+    return {
+      params: { slug },
+      props: {
+        title,
+        slug,
+        description,
+        photos: formattedPhotos,
+      },
+    };
+  });
   return pages;
 }
 
-const { content, title, date } = Astro.props;
+const { title, slug, description, photos } = Astro.props;
 ---
 
 <Layout title={title}>
-  <h1>{title}</h1>
-  <time>{date}</time>
-  <article set:html={content} />
+  <section class="p-6 lg:px-8">
+    <Breadcrumbs
+      breadcrumbs={[
+        { name: "Home", href: "/" },
+        { name: "Collections", href: "/collections" },
+      ]}
+      name={title}
+      href={`/collections/${slug}`}
+    />
+    <PhotoGrid
+      photos={photos.map((photo) => ({
+        title: photo?.title as string,
+        src: photo?.image?.imageSrc as string,
+        alt: photo?.image?.imageAlt as string,
+        PhotoGrid,
+      }))}
+    />
+  </section>
 </Layout>
