@@ -2,6 +2,7 @@
 import { configuration } from "@/configuration";
 import Layout from "@/layouts/Layout.astro";
 import Card from "@/components/Card.astro";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 import { CONTENT_TYPES, contentfulClient } from "@/lib/contentful";
 import type { PortfolioCollection } from "@/lib/contentful";
@@ -38,8 +39,12 @@ const collections = entries.items.map((item) => {
 ---
 
 <Layout title={configuration.siteTitle}>
-  <div class="container max-w-7xl lg:p-8 mx-auto">
-    <h1 class="text-4xl mb-4">Collections</h1>
+  <section class="p-6 lg:px-8">
+    <Breadcrumbs
+      breadcrumbs={[{ name: "Home", href: "/" }]}
+      name={"Collections"}
+      href={`/collections`}
+    />
     <ul>
       {
         collections.map((collection) => (
@@ -51,5 +56,5 @@ const collections = entries.items.map((item) => {
         ))
       }
     </ul>
-  </div>
+  </section>
 </Layout>

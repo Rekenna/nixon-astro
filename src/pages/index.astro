@@ -1,51 +1,43 @@
 ---
 import { configuration } from "@/configuration";
 import Layout from "@/layouts/Layout.astro";
+import PhotoGrid from "@/components/PhotoGrid";
 
 import { CONTENT_TYPES, contentfulClient } from "@/lib/contentful";
-import type { PortfolioCollection } from "@/lib/contentful";
+import type { PortfolioItem } from "@/lib/contentful";
 
-const entries = await contentfulClient.getEntries<PortfolioCollection>({
-  content_type: CONTENT_TYPES.PORTFOLIO_COLLECTION,
+const entries = await contentfulClient.getEntries<PortfolioItem>({
+  content_type: CONTENT_TYPES.PORTFOLIO_ITEM,
 });
 
-const collections = entries.items.map((item) => {
-  const { title, slug, description, photos } = item.fields;
+const photos = entries.items.map((item) => {
+  const { title, slug, image } = item.fields;
 
-  const formattedPhotos = photos
-    .map((photo) => {
-      if ("fields" in photo) {
-        const { title, slug, content, image, products } = photo.fields;
-        return {
-          title,
-          slug,
-          content,
-          image: image && "fields" in image ? image.fields : null,
-          products,
-        };
-      }
-      return null;
-    })
-    .filter(Boolean);
+  const formattedImage =
+    image && "fields" in image
+      ? {
+          id: image.sys.id,
+          imageSrc: image.fields.file?.url as string,
+          imageAlt: image.fields.title as string,
+          primary: false,
+        }
+      : null;
   return {
     title,
     slug,
-    description,
-    photos: formattedPhotos,
+    image: formattedImage,
   };
 });
 ---
 
 <Layout title={configuration.siteTitle}>
-  <ul>
-    {
-      collections.map((collection) => (
-        <li>
-          <a href={`/collections/${collection.slug}/`}>
-            <h2>{collection.title}</h2>
-          </a>
-        </li>
-      ))
-    }
-  </ul>
+  <section class="p-6 lg:px-8">
+    <PhotoGrid
+      photos={photos.map((photo) => ({
+        title: photo?.title as string,
+        src: photo?.image?.imageSrc as string,
+        alt: photo?.image?.imageAlt as string,
+      }))}
+    />
+  </section>
 </Layout>
