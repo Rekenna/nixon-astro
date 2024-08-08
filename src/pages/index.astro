@@ -19,7 +19,8 @@ const photos = entries.items.map((item) => {
           id: image.sys.id,
           imageSrc: image.fields.file?.url as string,
           imageAlt: image.fields.title as string,
-          primary: false,
+          height: image.fields.file?.details?.image?.height as number,
+          width: image.fields.file?.details?.image?.width as number,
         }
       : null;
   return {
@@ -33,11 +34,15 @@ const photos = entries.items.map((item) => {
 <Layout title={configuration.siteTitle}>
   <section class="p-6 lg:px-8">
     <PhotoGrid
+      id="portfolio"
       photos={photos.map((photo) => ({
         title: photo?.title as string,
         src: photo?.image?.imageSrc as string,
         alt: photo?.image?.imageAlt as string,
+        height: photo?.image?.height as number,
+        width: photo?.image?.width as number,
       }))}
+      client:load
     />
   </section>
 </Layout>

@@ -32,7 +32,8 @@ export async function getStaticPaths() {
                   id: image.sys.id,
                   imageSrc: image.fields.file?.url as string,
                   imageAlt: image.fields.title as string,
-                  primary: false,
+                  height: image.fields.file?.details?.image?.height as number,
+                  width: image.fields.file?.details?.image?.width as number,
                 }
               : null;
 
@@ -74,11 +75,15 @@ const { title, slug, description, photos } = Astro.props;
       href={`/collections/${slug}`}
     />
     <PhotoGrid
+      id="collection"
       photos={photos.map((photo) => ({
         title: photo?.title as string,
         src: photo?.image?.imageSrc as string,
         alt: photo?.image?.imageAlt as string,
+        height: photo?.image?.height as number,
+        width: photo?.image?.width as number,
       }))}
+      client:load
     />
   </section>
 </Layout>
