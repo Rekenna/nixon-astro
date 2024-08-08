@@ -23,7 +23,8 @@ export default function Masthead({ menu }: MastheadProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="bg-transparent sticky inset-0 z-10">
+    // if you want sticky add "sticky inset-0 z-10"
+    <header className="bg-transparent">
       <nav
         aria-label="Global"
         className="mx-auto flex items-center justify-between p-6 lg:px-8 lg:h-20"
