@@ -2,21 +2,24 @@
 import { configuration } from "@/configuration";
 import Layout from "@/layouts/Layout.astro";
 
-// import { CONTENT_TYPES, contentfulClient } from "@/lib/contentful";
-// import type { PageBlogPost } from "@/lib/contentful";
+import { CONTENT_TYPES, contentfulClient } from "@/lib/contentful";
+import type { PortfolioCollection } from "@/lib/contentful";
 
-// const entries = await contentfulClient.getEntries<PageBlogPost>({
-//   content_type: CONTENT_TYPES.BLOG_POST,
-// });
+const entries = await contentfulClient.getEntries<PortfolioCollection>({
+  content_type: CONTENT_TYPES.PORTFOLIO_COLLECTION,
+});
 
-// const posts = entries.items.map((item) => {
-//   const { title, date, slug } = item.fields;
-//   return {
-//     title,
-//     slug,
-//     date: new Date(date).toLocaleDateString(),
-//   };
-// });
+const collections = entries.items.map((item) => {
+  const { title, slug, description, photos } = item.fields;
+  return {
+    title,
+    slug,
+    description,
+    photos,
+  };
+});
+
+console.log({ collections });
 ---
 
 <Layout title={configuration.siteTitle}>

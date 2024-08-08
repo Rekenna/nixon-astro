@@ -50,7 +50,6 @@ const menu =
   })[0] || {};
 
 const { title } = Astro.props;
-
 ---
 
 <!doctype html>
@@ -64,37 +63,36 @@ const { title } = Astro.props;
     <title>{title}</title>
   </head>
   <body class="bg-dark font-sans text-white relative">
-    <Masthead menu={menu as MastheadProps["menu"]} />
+    <Masthead menu={menu as MastheadProps["menu"]} client:load />
     <main>
       <slot />
     </main>
   </body>
 </html>
 
-
 <!-- This is just for font registration -->
-<style is:global> 
-@font-face {
-  font-family: 'PP Neue Montreal';
-  src: url('/fonts/PPNeueMontreal/PPNeueMontreal-Regular.otf') format('otf');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
+<style is:global>
+  @font-face {
+    font-family: "PP Neue Montreal";
+    src: url("/fonts/PPNeueMontreal/PPNeueMontreal-Regular.otf") format("otf");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
 
-@font-face {
-  font-family: 'PP Neue Montreal';
-  src: url('/fonts/PPNeueMontreal/PPNeueMontreal-Italic.otf') format('otf');
-  font-weight: normal;
-  font-style: italic;
-  font-display: swap;
-}
+  @font-face {
+    font-family: "PP Neue Montreal";
+    src: url("/fonts/PPNeueMontreal/PPNeueMontreal-Italic.otf") format("otf");
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+  }
 
-@font-face {
-  font-family: 'PP Neue Montreal';
-  src: url('/fonts/PPNeueMontreal/PPNeueMontreal-Bold.otf') format('otf');
-  font-weight: bold;
-  font-style: normal;
-  font-display: swap;
-}
+  @font-face {
+    font-family: "PP Neue Montreal";
+    src: url("/fonts/PPNeueMontreal/PPNeueMontreal-Bold.otf") format("otf");
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+  }
 </style>

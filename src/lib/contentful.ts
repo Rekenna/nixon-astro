@@ -12,6 +12,8 @@ export enum CONTENT_TYPES {
   CONTENT_PAGE = "pageContent",
   BLOG_POST = "pageBlogPost",
   NAVIGATION_MENU = "settingsNavigationMenu",
+  PORTFOLIO_COLLECTION = "contentPortfolioCollection",
+  PORTFOLIO_ITEM = "contentPortfolioPhoto",
 }
 
 export interface PageContent {
@@ -40,5 +42,26 @@ export interface NavigationMenu {
     internalName: EntryFieldTypes.Text;
     slug: EntryFieldTypes.Text;
     items: EntryFieldTypes.Array<EntryFieldTypes.EntryLink<any>>;
+  };
+}
+
+export interface PortfolioCollection {
+  contentTypeId: CONTENT_TYPES.PORTFOLIO_COLLECTION;
+  fields: {
+    title: EntryFieldTypes.Text;
+    slug: EntryFieldTypes.Text;
+    description: EntryFieldTypes.Text;
+    photos: EntryFieldTypes.Array<EntryFieldTypes.EntryLink<PortfolioItem>>;
+  };
+}
+
+export interface PortfolioItem {
+  contentTypeId: CONTENT_TYPES.PORTFOLIO_ITEM;
+  fields: {
+    title: EntryFieldTypes.Text;
+    slug: EntryFieldTypes.Text;
+    image: EntryFieldTypes.AssetLink;
+    content: EntryFieldTypes.Text;
+    products: EntryFieldTypes.Array<EntryFieldTypes.EntryLink<any>>;
   };
 }
