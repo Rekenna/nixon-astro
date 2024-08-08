@@ -1,4 +1,21 @@
-# Astro Starter Kit: Basics
+# Nixon Photography Starter
+
+## Notes
+
+This project utilizes [Contentful](https://app.contentful.com/) for content management. You'll need to make a copy of `.env.example` for your own `.env` and fill in the Contentful values for this site to work.
+
+You'll see on the `PortfolioItem` content type that there is a `products` definition. This is linked to [Shopify](), which stores all of the available products/prints available to purchase, and the commerce processes. I followed this [guide](https://www.theprintspace.co.uk/help/knowledge-base/start-selling-your-art-online-in-7-easy-steps/) to setup a sync from [CreativeHub](https://app.creativehub.io) to upload photos that I want to sell as prints for drop shipping, and then sync them to Shopify to handle the processing.
+
+This integration is not fully setup, but where it is at demonstrates that you can pull Shopify data into the porfolio website, all the way through. Which means that with a later integration setup, you could have the ability to refer customers to purchase prints directly from the website. Even handing them off to the Stripe purchase/checkout flow would work very well. Since we have all of the variant data in Shopify, Contentful only needs to know which product each `PortfolioItem` refers to and we have all the connections we need to build out a robust flow for picking out frames, and sizes for prints to purchase.
+
+### Resources
+
+Since this is an Astro website, with TailwindCSS installed, I highly recommend leaning into [Tailwind Components](https://tailwindui.com/components) for the build out of more pages. The live website is hosted on [Netlify](https://www.netlify.com/), and is rebuilt anytime changes in Shopify, or Contentful occur.
+
+I was able to accomplish all of this with just the free plan of all of these platforms. That being said, Shopify does cost a monthly amount after a trial period so I recommend building out the rest of the site to handle traffic and only enable/complete that integration when selling products at scale becomes a priority.
+
+
+## Astro Starter Kit: Basics
 
 ```sh
 npm create astro@latest -- --template basics
