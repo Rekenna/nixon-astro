@@ -26,6 +26,8 @@ export async function getStaticPaths() {
             products,
           } = photo.fields;
 
+          console.log({ products });
+
           const formattedImage =
             image && "fields" in image
               ? {
@@ -34,6 +36,9 @@ export async function getStaticPaths() {
                   imageAlt: image.fields.title as string,
                   height: image.fields.file?.details?.image?.height as number,
                   width: image.fields.file?.details?.image?.width as number,
+                  products: products
+                    ? products.map((product) => `${product}`)
+                    : null,
                 }
               : null;
 
@@ -61,7 +66,9 @@ export async function getStaticPaths() {
   return pages;
 }
 
-const { title, slug, description, photos } = Astro.props;
+const { title, slug, photos } = Astro.props;
+
+console.log({ photos });
 ---
 
 <Layout title={title}>
@@ -82,6 +89,7 @@ const { title, slug, description, photos } = Astro.props;
         alt: photo?.image?.imageAlt as string,
         height: photo?.image?.height as number,
         width: photo?.image?.width as number,
+        products: photo?.products as unknown as string[],
       }))}
       client:load
     />

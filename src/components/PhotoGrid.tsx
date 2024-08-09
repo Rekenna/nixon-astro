@@ -1,7 +1,7 @@
-import clsx from "clsx";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
+import PortfolioImage from "./PortfolioImage";
 
 export default function PhotoGrid({
   id,
@@ -14,6 +14,7 @@ export default function PhotoGrid({
     alt: string;
     height: number;
     width: number;
+    products?: string[] | undefined;
   }[];
 }) {
   useEffect(() => {
@@ -34,22 +35,12 @@ export default function PhotoGrid({
       className="columns-1 gap-5 sm:columns-2 sm:gap-8 md:columns-3"
     >
       {photos.map((photo, i) => (
-        <a
+        <PortfolioImage
           key={photo.title}
-          href={photo.src}
-          data-pswp-width={photo.width}
-          data-pswp-height={photo.height}
-          target="_blank"
-          className={clsx("block", {
-            "mt-8": i > 0,
-          })}
-        >
-          <img
-            className="h-auto max-w-full rounded-lg"
-            src={photo.src}
-            alt={photo.alt || photo.title}
-          />
-        </a>
+          photo={photo}
+          index={i}
+          onClick={() => {}}
+        />
       ))}
     </motion.div>
   );
