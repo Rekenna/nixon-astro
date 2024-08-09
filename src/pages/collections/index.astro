@@ -7,6 +7,7 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import { CONTENT_TYPES, contentfulClient } from "@/lib/contentful";
 import type { PortfolioCollection } from "@/lib/contentful";
 
+export const prerender = true;
 const entries = await contentfulClient.getEntries<PortfolioCollection>({
   content_type: CONTENT_TYPES.PORTFOLIO_COLLECTION,
 });
