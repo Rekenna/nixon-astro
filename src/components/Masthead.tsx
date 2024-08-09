@@ -24,7 +24,7 @@ export default function Masthead({ menu }: MastheadProps) {
 
   return (
     // if you want sticky add "sticky inset-0 z-10"
-    <header className="bg-transparent">
+    <header className="bg-transparent sticky inset-0 z-10">
       <nav
         aria-label="Global"
         className="mx-auto flex items-center justify-between p-6 lg:px-8 lg:h-20"
@@ -45,9 +45,12 @@ export default function Masthead({ menu }: MastheadProps) {
             <a
               key={item.title}
               href={item.href}
-              className={clsx("text-lg leading-6 text-white", {
-                "text-slate-200 underline": item.isActive,
-              })}
+              className={clsx(
+                "text-lg leading-6 text-white uppercase font-bold",
+                {
+                  "text-slate-200 underline": item.isActive,
+                }
+              )}
             >
               {item.title}
             </a>
